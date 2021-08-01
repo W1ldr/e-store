@@ -1,0 +1,11 @@
+{
+  "name": "eshop",
+  "version": "0.0.1",
+  "description": "backend for e-store",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon.cmd app.js"
+  },
+  "author": "W1ldr",
+  "license": "MIT"
+}
