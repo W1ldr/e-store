@@ -1,7 +1,9 @@
 const Express = require("express");
-
 const app = Express();
+
 const morgan = require("morgan");
+const mongoose = require("mongoose");
+
 const port = 3000;
 
 //middleware
@@ -28,6 +30,20 @@ app.post(`${api}/products`, (req, res) => {
   console.log(newProduct);
   res.send(newProduct);
 });
+
+//conectando a base de dados
+mongoose
+  .connect(process.env.CONNECTION_STRING, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: "estore_test-databese",
+  })
+  .then(() => {
+    console.log("connection is ready");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
