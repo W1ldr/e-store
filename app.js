@@ -1,50 +1,47 @@
 const Express = require("express");
 const app = Express();
-
 const morgan = require("morgan");
 const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv/config");
 
-const port = 3000;
+app.use(cors());
+app.options("*", cors());
 
 //middleware
 app.use(Express.json());
 app.use(morgan("tiny"));
 
-//for local variables in .env
-//if you don't have my .env uncomment the next line
-//const api = '/api/v1'
-require("dotenv/config");
+//Routes
+const categoriesRoutes = require("./routes/categories");
+const productsRoutes = require("./routes/products");
+const usersRoutes = require("./routes/users");
+const ordersRoutes = require("./routes/orders");
+
 const api = process.env.API_URL;
+//if you don't have my ".env" file uncomment the next line and comment the upper line
+//const api = '/api/v1'
 
-app.get(`${api}/products`, (req, res) => {
-  const Products = {
-    id: 1,
-    name: "hair dresser",
-    image: "image url",
-  };
-  res.send(Products);
-});
+app.use(`${api}/categories`, categoriesRoutes);
+app.use(`${api}/products`, productsRoutes);
+app.use(`${api}/users`, usersRoutes);
+app.use(`${api}/orders`, ordersRoutes);
 
-app.post(`${api}/products`, (req, res) => {
-  const newProduct = req.body;
-  console.log(newProduct);
-  res.send(newProduct);
-});
-
-//conectando a base de dados
+//Database
 mongoose
   .connect(process.env.CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    dbName: "estore_test-databese",
+    dbName: "eshop-database",
   })
   .then(() => {
-    console.log("connection is ready");
+    console.log("Database Connection is ready...");
   })
   .catch((err) => {
     console.log(err);
   });
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+//Server
+app.listen(3000, () => {
+  console.log("server is running http://localhost:3000");
 });
